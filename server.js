@@ -142,6 +142,70 @@ router.route('/movies')
         }
     })
 
+router.route('/movies/:reviews')
+    .post(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        res = res.status(200);
+
+        Movie.find({title: req.params.title}).exec(function (err) {
+            if (err) {
+                res.send(err);
+            }
+        })
+        if (!req.body.reviewerName) {
+            res.json({success: false, message: 'Review must contain the name of the reviewer.'})
+        }
+        else if (!req.body.review) {
+            res.json({success: false, message: 'Review must contain a comment'})
+        }
+        else {
+            let reviewNew = new Review();
+            reviewNew.title = req.body.title;
+            reviewNew.review = req.body.review;
+
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+
+            reviewNew.save(function (err) {
+                if (err) {
+                    return res.send(err);
+                }
+                else {
+                    let o = getJSONObjectForMovieRequirement(req, 'review saved');
+                    res.json(o)
+                }
+            });
+        }
+    })
+    .get(function (req, res) {
+        console.log(req.body);
+        res = res.status(200);
+
+        if (req.get('Content-Type')) {
+            res = res.type(req.get('Content-Type'));
+        }
+
+        Movie.find({title: req.params.title}).exec(function (err, movie) {
+            if (err) {
+                res.send(err);
+            }
+
+        let movieReview = db.movies.aggregate( [
+            {
+                $lookup:
+                    {
+                        from: 'reviews',
+                        localField: 'title',
+                        foreignField: 'title',
+                        as: 'Movie with reviews'
+                    }
+            }
+        ])
+            res.json(movieReview);
+        })
+    })
+
 router.route('/movies/:title')
     .get(authJwtController.isAuthenticated, function (req, res) {
         console.log(req.body);
