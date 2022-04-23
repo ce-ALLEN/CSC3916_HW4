@@ -18,7 +18,7 @@ let ReviewSchema = new Schema({
     // review: {reviewerName: String, review: String, rating: String}
     reviewerName: {type: String, required: true},
     review: {type: String, required: true},
-    rating: {type: String, required: true}
+    rating: {type: Number, required: true}
 });
 
 

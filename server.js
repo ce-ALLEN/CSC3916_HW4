@@ -229,6 +229,11 @@ router.route('/movies/:reviews')
                         {
                             $match: { "title": req.body.title },
                         },
+                        {
+                            $addFields: {
+                                rating: { $avg: "$movieReview.rating"}
+                            }
+                        }
                     ])
                     .then ((result) => {
                         console.log(result);
