@@ -12,12 +12,12 @@ try {
 }
 mongoose.set('useCreateIndex', true);
 
-//movies schema
+//reviews schema
 let ReviewSchema = new Schema({
     title: {type: String, required: true, index: { unique: true}},
-    review: [{reviewerName: String, required: true}, {review: String, required: true}, {rating: String, required: true}]
+    review: [{reviewerName: String, review: String, rating: String}]
 });
 
 
 //return the model to server
-module.exports = mongoose.model('Review', MovieSchema);
+module.exports = mongoose.model('Review', ReviewSchema);

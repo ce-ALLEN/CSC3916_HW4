@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const User = require('./Users');
 const Movie = require("./Movies");
+const Review = require("./Reviews");
 
 const app = express();
 app.use(cors());
@@ -152,11 +153,11 @@ router.route('/movies/:reviews')
                 res.send(err);
             }
         })
-        if (!req.body.reviewerName) {
-            res.json({success: false, message: 'Review must contain the name of the reviewer.'})
+        if (!req.body.title) {
+            res.json({success: false, message: 'Title must be included to post reviews.'})
         }
         else if (!req.body.review) {
-            res.json({success: false, message: 'Review must contain a comment'})
+            res.json({success: false, message: 'Must include a review'})
         }
         else {
             let reviewNew = new Review();
