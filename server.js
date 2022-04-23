@@ -89,6 +89,54 @@ router.route('/movies')
             res = res.type(req.get('Content-Type'));
         }
 
+        if (req.body.title) {
+            // let movie = new Movie;
+            // movie.title = req.body.title;
+
+            Movie.find().exec(function (err, movies) {
+                if (err) {
+                    res.send(err);
+                }
+                // else {
+                //     movie.yearReleased = yearReleased;
+                // }
+                if (movies.length < 1) {
+                    res.json({success: false, message: 'No movies found.'});
+                }
+                else {
+                    Movie.aggregate(
+                        [{ $match : {"title": req.body.title }}]
+                    )
+                    .then ((result) => {
+                            console.log(result);
+                            return res.json(result);
+                        })
+                }
+                // else {
+                //         Movie.aggregate(
+                //             [
+                //                 $match: { "title": req.body.title },
+                //             ]
+                //         )
+                //
+                //
+                // ])
+                // .then ((result) => {
+                //         console.log(result);
+                //         return res.json(result);
+                //     })
+                //     res.json(movies);
+                //     const pipeline = [
+                //         { $match: {"title": req.body.title}}
+                //     ];
+                //     const aggCursor = Movie.aggregate(pipeline);
+                //     for await (const doc of aggCursor) {
+                //         console.log(doc);
+                //     }
+                // }
+            })
+        }
+
         Movie.find().exec(function (err, movies) {
             if (err) {
                 res.send(err);
@@ -189,7 +237,7 @@ router.route('/movies/:reviews')
             res = res.type(req.get('Content-Type'));
         }
 
-        Movie.findOne({title: req.params.title}).exec(function (err, movie) {
+        Movie.find().exec(function (err) {
             if (err) {
                 res.send(err);
             }
