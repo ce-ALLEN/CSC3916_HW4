@@ -15,7 +15,7 @@ mongoose.set('useCreateIndex', true);
 //reviews schema
 let ReviewSchema = new Schema({
     title: {type: String, required: true, index: { unique: true}},
-    review: [{reviewerName: String, review: String, rating: String}]
+    review: {reviewerName: String, review: String, rating: String}
 });
 
 
