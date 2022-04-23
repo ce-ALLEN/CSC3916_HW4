@@ -189,25 +189,102 @@ router.route('/movies/:reviews')
             res = res.type(req.get('Content-Type'));
         }
 
-        Movie.find({title: req.params.title}).exec(function (err, movie) {
+        Movie.findOne({title: req.params.title}).exec(function (err, movie) {
             if (err) {
                 res.send(err);
             }
 
-        let movieReview = db.movies.aggregate( [
-            {
-                $lookup:
-                    {
-                        from: 'reviews',
-                        localField: 'title',
-                        foreignField: 'title',
-                        as: 'Movie with reviews'
-                    }
+        // let movieReview = DB.movies.aggregate( [
+            else {
+
+                // console.log(movie.title);
+                // let title = req.body.title;
+                Movie.aggregate(
+                    [
+                        // {
+                        //     $match: { title: "title" },
+                        // },
+                        {
+                            $lookup: {
+                                from: "reviews",
+                                localField: "title",
+                                foreignField: "title",
+                                as: "movieReview"
+                            },
+                        },
+                        {
+                            $match: { "title": req.body.title },
+                        },
+                        // {
+                        //     $unwind: "$movieReview",
+                        // },
+                    ])
+                    .then ((result) => {
+                        console.log(result);
+                        return res.json(result);
+                    })
+                    // return res.json("$movieReview");
+                // )
             }
-        ])
-            res.json(movieReview);
         })
     })
+
+
+
+                // Movie.aggregate( [
+                //     {
+                //         $lookup:
+                //             {
+                //                 from: 'reviews',
+                //                 // start match test
+                //                 let: {_title: req.params.title},
+                //                 pipeline: [
+                //                     {
+                //                         $match: {
+                //                             $expr: {
+                //                                 $eq: ["$$_title", "title"]
+                //                             }
+                //                             // }
+                //                             // localField: req.params.title,
+                //                             // foreignField: req.params.title,
+                //                         }
+                //                     },
+                //                     { $project: {_id: 0}}
+                //                         // as: 'Movie with reviews'
+                //                     ], as: 'Movie with reviews'
+                //             }
+                //     }
+                //
+                // ]).exec( function (err, movieReviews) {
+                //     if (err) {
+                //         res.send(err);
+                //     }
+                //     else {
+                //         res.json(movieReviews);
+                //     }
+                // })
+            // }
+        //     Movie.aggregate( [
+        //     {
+        //         $lookup:
+        //             {
+        //                 from: 'reviews',
+        //                 localField: 'title',
+        //                 foreignField: ,
+        //                 as: 'Movie with reviews'
+        //             }
+        //     }
+        // ]).exec( function (err, movieReviews) {
+        //     if (err) {
+        //         res.send(err);
+        //     }
+        //     else {
+        //         res.json(movieReviews);
+        //     }
+        //     })
+            // res.json(movieReview);
+    //     })
+    // })
 
 router.route('/movies/:title')
     .get(authJwtController.isAuthenticated, function (req, res) {
