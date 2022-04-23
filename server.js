@@ -158,11 +158,22 @@ router.route('/movies/:reviews')
         console.log(req.body);
         res = res.status(200);
 
-        Movie.find({title: req.params.title}).exec(function (err) {
+        Movie.find().exec(function (err, movies) {
             if (err) {
                 res.send(err);
             }
+            let found = false;
+
+            for (let i = 0; i < movies.length; i++) {
+                if (movies[i].title === req.body.title) {
+                    found = true;
+                }
+            }
+            if (!found) {
+                return res.json({success: false, message: 'Movie not found'});
+            }
         })
+
         if (!req.body.title) {
             res.json({success: false, message: 'Title must be included to post reviews.'})
         }
