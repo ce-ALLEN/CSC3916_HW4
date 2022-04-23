@@ -101,6 +101,9 @@ router.route('/movies')
                     if (movies[i].title === req.body.title) {
                         return res.json(movies[i]);
                     }
+                    else {
+                        return res.json({success: false, message: 'Movie not found'})
+                    }
                 }
             }
             else {
