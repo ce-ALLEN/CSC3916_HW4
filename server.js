@@ -193,17 +193,9 @@ router.route('/movies/:reviews')
             if (err) {
                 res.send(err);
             }
-
-        // let movieReview = DB.movies.aggregate( [
             else {
-
-                // console.log(movie.title);
-                // let title = req.body.title;
                 Movie.aggregate(
                     [
-                        // {
-                        //     $match: { title: "title" },
-                        // },
                         {
                             $lookup: {
                                 from: "reviews",
@@ -215,76 +207,14 @@ router.route('/movies/:reviews')
                         {
                             $match: { "title": req.body.title },
                         },
-                        // {
-                        //     $unwind: "$movieReview",
-                        // },
                     ])
                     .then ((result) => {
                         console.log(result);
                         return res.json(result);
                     })
-                    // return res.json("$movieReview");
-                // )
             }
         })
     })
-
-
-
-                // Movie.aggregate( [
-                //     {
-                //         $lookup:
-                //             {
-                //                 from: 'reviews',
-                //                 // start match test
-                //                 let: {_title: req.params.title},
-                //                 pipeline: [
-                //                     {
-                //                         $match: {
-                //                             $expr: {
-                //                                 $eq: ["$$_title", "title"]
-                //                             }
-                //                             // }
-                //                             // localField: req.params.title,
-                //                             // foreignField: req.params.title,
-                //                         }
-                //                     },
-                //                     { $project: {_id: 0}}
-                //                         // as: 'Movie with reviews'
-                //                     ], as: 'Movie with reviews'
-                //             }
-                //     }
-                //
-                // ]).exec( function (err, movieReviews) {
-                //     if (err) {
-                //         res.send(err);
-                //     }
-                //     else {
-                //         res.json(movieReviews);
-                //     }
-                // })
-            // }
-        //     Movie.aggregate( [
-        //     {
-        //         $lookup:
-        //             {
-        //                 from: 'reviews',
-        //                 localField: 'title',
-        //                 foreignField: ,
-        //                 as: 'Movie with reviews'
-        //             }
-        //     }
-        // ]).exec( function (err, movieReviews) {
-        //     if (err) {
-        //         res.send(err);
-        //     }
-        //     else {
-        //         res.json(movieReviews);
-        //     }
-        //     })
-            // res.json(movieReview);
-    //     })
-    // })
 
 router.route('/movies/:title')
     .get(authJwtController.isAuthenticated, function (req, res) {
