@@ -22,7 +22,6 @@ let MovieSchema = new Schema({
     test: {type: String}
 });
 
-MovieSchema.createIndex({ title: 1}, { unique: true});
 
 //return the model to server
 module.exports = mongoose.model('Movie', MovieSchema);
