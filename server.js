@@ -135,6 +135,7 @@ router.route('/movies')
             movieNew.yearReleased = req.body.yearReleased;
             movieNew.genre = req.body.genre;
             movieNew.actors = req.body.actors;
+            movieNew.imgURL = req.body.imgURL;
 
             if (req.get('Content-Type')) {
                 res = res.type(req.get('Content-Type'));
