@@ -162,7 +162,9 @@ router.route('/movies/:reviews')
         else {
             let reviewNew = new Review();
             reviewNew.title = req.body.title;
+            reviewNew.reviewerName = req.body.reviewerName;
             reviewNew.review = req.body.review;
+            reviewNew.rating = req.body.rating;
 
             if (req.get('Content-Type')) {
                 res = res.type(req.get('Content-Type'));
