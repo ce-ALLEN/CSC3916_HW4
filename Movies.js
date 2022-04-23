@@ -18,7 +18,7 @@ let MovieSchema = new Schema({
     yearReleased: {type: String, required: true},
     genre: {type: String, required: true},
     actors: [{actorName: String, characterName: String}],
-    img: {data: Buffer, contentType: String}
+    imgURL: {type: String}
 });
 
 
