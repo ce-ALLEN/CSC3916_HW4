@@ -144,7 +144,7 @@ router.route('/movies')
 
             movieNew.save(function (err) {
                 if (err) {
-                    if (err.code == 11000)
+                    if (err.code === 11000)
                         return res.json({success: false, message: 'A movie with that title already exists.'});
                     else
                         return res.json(err);
