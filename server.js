@@ -96,6 +96,13 @@ router.route('/movies')
             if (movies.length < 1) {
                 res.json({success: false, message: 'No movies found.'});
             }
+            else if (req.body.title) {
+                for (let i = 0; i < movies.length; i++) {
+                    if (movies[i].title === req.body.title) {
+                        return res.json(movies[i]);
+                    }
+                }
+            }
             else {
                 res.json(movies);
             }
