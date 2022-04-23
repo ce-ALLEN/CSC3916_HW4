@@ -102,7 +102,8 @@ router.route('/movies')
                         return res.json(movies[i]);
                     }
                     else {
-                        return res.json({success: false, message: 'Movie not found'})
+                        return res.json({success: false, message: 'Movie not found. If searching for reviews,' +
+                                'review paramater must be included in query.'})
                     }
                 }
             }
