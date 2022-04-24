@@ -267,9 +267,9 @@ router.route('/reviews')
         else if (!req.body.rating) {
             res.status(400).json({success: false, message: 'Must include a rating'})
         }
-        else if (!req.body.reviewerName) {
-            res.status(400).json({success: false, message: 'Must include name of reviewer'})
-        }
+        // else if (!req.body.reviewerName) {
+        //     res.status(400).json({success: false, message: 'Must include name of reviewer'})
+        // }
         else {
             Movie.findOne({ title: req.body.title }, function (err, movie) {
                 if (err) {
@@ -281,7 +281,8 @@ router.route('/reviews')
                 else {
                     let reviewNew = new Review();
                     reviewNew.title = req.body.title;
-                    reviewNew.reviewerName = req.body.reviewerName;
+                    // reviewNew.reviewerName = req.body.reviewerName;
+                    reviewNew.reviewerName = req.user.username;
                     reviewNew.review = req.body.review;
                     reviewNew.rating = req.body.rating;
 
