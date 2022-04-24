@@ -80,94 +80,7 @@ router.post('/signin', function (req, res) {
     })
 });
 
-router.route('/movies')
-    .get(authJwtController.isAuthenticated, function (req, res) {
-        console.log(req.body);
-        Movie.find({}, function (err, movies) {
-            if (err) {
-                res.status(401).json({ success: false, message: "Failed to get movies" })
-            }
-            else {
-                if (req.query.reviews === true) {
-                    Movie.aggregate( [
-                        {
-                            $match:
-                                {
-                                    title: req.params[0]
-                                },
-                        },
-                        {
-                            $lookup:
-                                {
-                                    from: "reviews",
-                                    localField: "title",
-                                    foreignField: "title",
-                                    as: "movieReview"
-                                }
-                        },
-                        {
-                            $addFields:
-                                {
-                                    averageRating: { $avg: "$movieReview.rating"}
-                                }
-                        }
-                    ]).sort({ averageRating: -1 }).exec( function(err, movieReview) {
-                        if (err) {
-                            res.status(500).json({ success: false, message: "Failed to get movies" })
-                        }
-                        else {
-                            res.status(200).json(movieReview)
-                        }
-                    })
-                }
-                else {
-                    res.status(200).json(movies)
-                }
-            }
-        })
-    })
-    .post(authJwtController.isAuthenticated, function (req, res) {
-        console.log(req.body);
 
-        const genres = ["Action", "Comedy", "Drama", "Fantasy", "Horror", "Mystery", "Thriller", "Western"];
-
-        if (!req.body.genre) {
-            res.json({success: false, message: 'Movie must contain a genre.'})
-        }
-        else if (!genres.includes(req.body.genre)) {
-            res.json({success: false, message: "Invalid genre.", accepted_genres: genres})
-        }
-        else if (req.body.yearReleased.length < 4) {
-            res.json({success: false, message: 'yearReleased must be at least 4 digits.'})
-        }
-        else if (req.body.actors.length < 3) {
-            res.json({success: false, message: 'Movie must contain at least three actors.'})
-        }
-        else {
-            let movieNew = new Movie();
-            movieNew.title = req.body.title;
-            movieNew.yearReleased = req.body.yearReleased;
-            movieNew.genre = req.body.genre;
-            movieNew.actors = req.body.actors;
-            movieNew.imgURL = req.body.imgURL;
-
-            if (req.get('Content-Type')) {
-                res = res.type(req.get('Content-Type'));
-            }
-
-            movieNew.save(function (err) {
-                if (err) {
-                    if (err.code === 11000)
-                        return res.json({success: false, message: 'A movie with that title already exists.'});
-                    else
-                        return res.json(err);
-                } else {
-                    var o = getJSONObjectForMovieRequirement(req, 'movie saved');
-                    res.json(o)
-                }
-            })
-        }
-    })
 
 router.route('movies/*')
     .get(authJwtController.isAuthenticated, function (req, res) {
@@ -266,7 +179,94 @@ router.route('movies/*')
     // })
     // })
 
+router.route('/movies')
+    .get(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        Movie.find({}, function (err, movies) {
+            if (err) {
+                res.status(401).json({ success: false, message: "Failed to get movies" })
+            }
+            else {
+                if (req.query.reviews === true) {
+                    Movie.aggregate( [
+                        {
+                            $match:
+                                {
+                                    title: req.params[0]
+                                },
+                        },
+                        {
+                            $lookup:
+                                {
+                                    from: "reviews",
+                                    localField: "title",
+                                    foreignField: "title",
+                                    as: "movieReview"
+                                }
+                        },
+                        {
+                            $addFields:
+                                {
+                                    averageRating: { $avg: "$movieReview.rating"}
+                                }
+                        }
+                    ]).sort({ averageRating: -1 }).exec( function(err, movieReview) {
+                        if (err) {
+                            res.status(500).json({ success: false, message: "Failed to get movies" })
+                        }
+                        else {
+                            res.status(200).json(movieReview)
+                        }
+                    })
+                }
+                else {
+                    res.status(200).json(movies)
+                }
+            }
+        })
+    })
+    .post(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
 
+        const genres = ["Action", "Comedy", "Drama", "Fantasy", "Horror", "Mystery", "Thriller", "Western"];
+
+        if (!req.body.genre) {
+            res.json({success: false, message: 'Movie must contain a genre.'})
+        }
+        else if (!genres.includes(req.body.genre)) {
+            res.json({success: false, message: "Invalid genre.", accepted_genres: genres})
+        }
+        else if (req.body.yearReleased.length < 4) {
+            res.json({success: false, message: 'yearReleased must be at least 4 digits.'})
+        }
+        else if (req.body.actors.length < 3) {
+            res.json({success: false, message: 'Movie must contain at least three actors.'})
+        }
+        else {
+            let movieNew = new Movie();
+            movieNew.title = req.body.title;
+            movieNew.yearReleased = req.body.yearReleased;
+            movieNew.genre = req.body.genre;
+            movieNew.actors = req.body.actors;
+            movieNew.imgURL = req.body.imgURL;
+
+            if (req.get('Content-Type')) {
+                res = res.type(req.get('Content-Type'));
+            }
+
+            movieNew.save(function (err) {
+                if (err) {
+                    if (err.code === 11000)
+                        return res.json({success: false, message: 'A movie with that title already exists.'});
+                    else
+                        return res.json(err);
+                } else {
+                    var o = getJSONObjectForMovieRequirement(req, 'movie saved');
+                    res.json(o)
+                }
+            })
+        }
+    })
 
 router.route('/reviews')
     .get(authJwtController.isAuthenticated, function (req, res) {
