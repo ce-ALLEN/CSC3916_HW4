@@ -93,7 +93,7 @@ router.route('/movies/*')
                 res.status(400).json({ success: false, message: "Movie not found" })
             }
             else {
-                if (req.query.reviews === true) {
+                if (req.query.reviews === 'true') {
                     Movie.aggregate( [
                         {
                             $match:
@@ -187,7 +187,7 @@ router.route('/movies')
                 res.status(401).json({ success: false, message: "Failed to get movies" })
             }
             else {
-                if (req.query.reviews === true) {
+                if (req.query.reviews === 'true') {
                     Movie.aggregate( [
                         {
                             $match:
