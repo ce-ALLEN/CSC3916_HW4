@@ -111,7 +111,7 @@ router.route('/movies/*')
                         {
                             $addFields:
                                 {
-                                    averageRating: { $avg: "$movieReview.rating"}
+                                    averageRating: { $round: [{ $avg: "$movieReview.rating" }, 2] }
                                 }
                         }
                     ]).exec( function( err, movieReview) {
