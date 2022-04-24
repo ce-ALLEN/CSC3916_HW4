@@ -131,52 +131,53 @@ router.route('/movies/*')
             }
         })
     })
-    // .put( authJwtController.isAuthenticated, function (req, res) {
-    //     console.log(req.body);
-    //     Movie.findOneAndUpdate({ title: req.params[0] }, req.body, { new: true }, function(err) {
-    //         if (err) {
-    //             res.status(400).json({ success: false, message: "Failed to update movie" })
-    //         }
-    //         else {
-    //             res.status(200).json({ success: true, message: "Movie updated" })
-    //         }
-    //     })
-    // })
-    // .delete(authJwtController.isAuthenticated, function(req, res) {
-    //     // console.log(req.body);
-    //     // Movie.remove({ title: req.params[0] }, (err) => {
-    //     //     if (err) {
-    //     //         res.status(400).json({ success: false, message: "Failed to delete movie" })
-    //     //     }
-    //     //     else {
-    //     //         res.status(200).json({ success: true, message: "Movie deleted" })
-    //     //     }
-    //     // })
-    //     //     .delete(authJwtController.isAuthenticated, function (req, res) {
-    //     console.log(req.body);
-    //     // res = res.status(200);
-    //     if (req.get('Content-Type')) {
-    //         res = res.type(req.get('Content-Type'));
-    //     }
-    //     Movie.find({title: req.params[0]}).exec(function (err, movie) {
-    //         if (err) {
-    //             res.send(err);
-    //         }
-    //         console.log(movie);
-    //         if (movie.length < 1) {
-    //             res.status(400).json({success: false, message: 'Title not found.'});
-    //         } else {
-    //             Movie.deleteOne({title: req.params[0]}).exec(function (err) {
-    //                 if (err) {
-    //                     res.send(err);
-    //                 } else {
-    //                     var o = getJSONObjectForMovieRequirement(req, 'movie deleted');
-    //                     res.json(o);
-    //                 }
-    //             })
-    //         }
-    //     })
-    // })
+    .put( authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        Movie.findOneAndUpdate({ title: req.params[0] }, req.body, { new: true }, function(err) {
+            if (err) {
+                res.status(400).json({ success: false, message: "Failed to update movie" })
+            }
+            else {
+                res.status(200).json({ success: true, message: "Movie updated" })
+            }
+        })
+    })
+    .delete(authJwtController.isAuthenticated, function(req, res) {
+        // console.log(req.body);
+        // Movie.remove({ title: req.params[0] }, (err) => {
+        //     if (err) {
+        //         res.status(400).json({ success: false, message: "Failed to delete movie" })
+        //     }
+        //     else {
+        //         res.status(200).json({ success: true, message: "Movie deleted" })
+        //     }
+        // })
+        //     .delete(authJwtController.isAuthenticated, function (req, res) {
+        console.log(req.body);
+        // res = res.status(200);
+        // if (req.get('Content-Type')) {
+        //     res = res.type(req.get('Content-Type'));
+        // }
+        Movie.findOne({title: req.params[0]}, function( err, movie ) {
+            if (err) {
+                res.send(err);
+            }
+            // console.log(movie);
+            if (!movie) {
+                res.status(400).json({success: false, message: 'Title not found.'});
+            }
+            else {
+                Movie.deleteOne({title: req.params[0]}).exec(function (err) {
+                    if (err) {
+                        res.send(err);
+                    } else {
+                        let o = getJSONObjectForMovieRequirement(req, 'movie deleted');
+                        res.json(o);
+                    }
+                })
+            }
+        })
+    })
     // })
 
 router.route('/movies')
