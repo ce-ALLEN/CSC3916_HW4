@@ -293,7 +293,7 @@ router.route('/reviews')
             res.status(400).json({success: false, message: 'Must include name of reviewer'})
         }
         else {
-            Review.findOne({ title: req.body.title }, function (err, movie) {
+            Movie.findOne({ title: req.body.title }, function (err, movie) {
                 if (err) {
                     res.json(err)
                 }
