@@ -82,7 +82,7 @@ router.post('/signin', function (req, res) {
 
 
 
-router.route('movies/*')
+router.route('/movies/*')
     .get(authJwtController.isAuthenticated, function (req, res) {
         console.log(req.body);
         Movie.findOne({ title: req.params[0] }, function(err, movie) {
