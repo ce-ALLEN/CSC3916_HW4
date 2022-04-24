@@ -156,7 +156,7 @@ router.route('movies/*')
         if (req.get('Content-Type')) {
             res = res.type(req.get('Content-Type'));
         }
-        Movie.find({title: req.params.title}).exec(function (err, movie) {
+        Movie.find({title: req.params[1]}).exec(function (err, movie) {
             if (err) {
                 res.send(err);
             }
