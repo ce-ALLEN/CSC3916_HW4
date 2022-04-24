@@ -156,7 +156,7 @@ router.route('movies/*')
         if (req.get('Content-Type')) {
             res = res.type(req.get('Content-Type'));
         }
-        Movie.find({title: req.params[1]}).exec(function (err, movie) {
+        Movie.find({title: req.params[0]}).exec(function (err, movie) {
             if (err) {
                 res.send(err);
             }
@@ -164,7 +164,7 @@ router.route('movies/*')
             if (movie.length < 1) {
                 res.status(400).json({success: false, message: 'Title not found.'});
             } else {
-                Movie.deleteOne({title: req.params.title}).exec(function (err) {
+                Movie.deleteOne({title: req.params[0]}).exec(function (err) {
                     if (err) {
                         res.send(err);
                     } else {
